@@ -11,7 +11,7 @@ router.post('/',(req,res,next)=>{
     const order={
         productID:req.body.productID,
         quantity: req.body.quantity
-    };
+    }
     res.status(201).json({
         message:'order were created',
         order : order
