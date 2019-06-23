@@ -34,35 +34,41 @@ router.get('/',(req,res,next)=>{
 });
 
 router.post('/',(req,res,next)=>{
-  
-    const order=new Order({
-        _id : mongoose.Types.ObjectId(),
-        productId : req.body.productId,
-        quantity : req.body.quantity
-    });
-    order
-        .save()
-        .then(result=>{
-            console.log(result);
-            res.status(201).json({
-                message : 'Order Stored',
-                createdOrder:{
-                    _id:result._id,
-                    productId:result.productId,
-                    quantity:result.quantity
-                },
-                request:{
-                    type : 'GET',
-                    url : 'http:localhost:3000/orders/'+result._id
+    Product.findById(req.body.productId)
+            .then(product=>{
+                if(!product){
+                    return res.status(404).json({
+                        message:'Product Not Found'
+                    });
                 }
-            });
-        })
-        .catch(err=>{
-            console.log(err);
-            res.status(500).json({
-                error:err
-            });
-        });
+                const order=new Order({
+                    _id : mongoose.Types.ObjectId(),
+                    productId : req.body.productId,
+                    quantity : req.body.quantity
+                });
+                return order
+                    .save()
+                    }).then(result=>{
+                        console.log(result);
+                        res.status(201).json({
+                            message : 'Order Stored',
+                            createdOrder:{
+                                _id:result._id,
+                                productId:result.productId,
+                                quantity:result.quantity
+                            },
+                            request:{
+                                type : 'GET',
+                                url : 'http:localhost:3000/orders/'+result._id
+                            }
+                        })
+                    .catch(err=>{
+                        console.log(err);
+                        res.status(500).json({
+                            error:err
+                        });
+                    });
+            })
 });
 
 router.get('/:orderID',(req,res,next)=>{
@@ -98,7 +104,7 @@ router.delete('/:orderID',(req,res,next)=>{
             request:{
                 type:'POST',
                 url:'http://localhost:3000/orders/',
-                body:{productId:'String',quantity:'Number'}
+                body:{productId:'ID',quantity:'Number'}
             }
         });
     })
