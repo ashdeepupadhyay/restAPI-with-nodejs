@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 
 const productRoutes = require('./api/routes/products');
 const ordersRoutes = require('./api/routes/orders');
+const usersRoutes = require('./api/routes/users');
 
 mongoose.connect("mongodb+srv://online-shop:"+process.env.MONGO_ATLAS_PW+"@online-shop-fshrm.mongodb.net/test?retryWrites=true&w=majority",{
     useMongoClient:true
@@ -14,7 +15,7 @@ mongoose.connect("mongodb+srv://online-shop:"+process.env.MONGO_ATLAS_PW+"@onlin
 
 app.use(morgan('dev'));//for logging
 //app.use(express.static('uploads'));//making the upload folder public or make another route for it
-app.use('/uploads',express.static('uploads'));
+app.use('/uploads',express.static('uploads'));//adding the /upload so the url can be discarded
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
@@ -33,6 +34,7 @@ app.use((req,res,next)=>{
 //Routes which should handle request
 app.use('/products',productRoutes);
 app.use('/orders',ordersRoutes);
+app.use('/users',usersRoutes);
 
 app.use((req,res,next)=>{
     const error =new Error('NOT FOUND');
