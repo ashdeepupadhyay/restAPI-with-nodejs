@@ -8,11 +8,27 @@ const storage = multer.diskStorage({
         cb(null,'./uploads/')
     },
     filename: function(req,file,cb){
-        cb(null,Date.now() + file.originalname);
+        cb(null,Date.now() + file.originalname);//(Date.now() returns milliseconds)
     }
 });
+;
+const fileFilter = (req,file,cb)=>{
+    //reject a file
+    if(file.mimetype ==='image/jpeg'||file.mimetype==='image/png'){
+        //accept a file
+        cb(null,true);
+    }else{
+        cb(new Error('file type not supported'),false); 
+    }    
+}
 
-const upload = multer({storage:storage});
+const upload = multer({
+    storage:storage,
+    limits:{
+    fileSize : 1024*1024 * 5    
+    },
+    fileFilter : fileFilter 
+});
 
 const Product = require('../models/product')
 router.get('/',(req,res,next)=>{
