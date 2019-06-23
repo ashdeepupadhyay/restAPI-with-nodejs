@@ -13,6 +13,8 @@ mongoose.connect("mongodb+srv://online-shop:"+process.env.MONGO_ATLAS_PW+"@onlin
 })
 
 app.use(morgan('dev'));//for logging
+//app.use(express.static('uploads'));//making the upload folder public or make another route for it
+app.use('/uploads',express.static('uploads'));
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
